@@ -28,7 +28,7 @@ public class StringTemplate {
 	doCompile();
     }
 
-    public static StringTemplate compile(String templatePattern) {
+    public static StringTemplate compile(final String templatePattern) {
 	return new StringTemplate(templatePattern);
     }
 
@@ -58,7 +58,7 @@ public class StringTemplate {
 	}
     }
 
-    private int readSeparator(char[] charArray, int currentIndex) {
+    private int readSeparator(final char[] charArray, final int currentIndex) {
 	int end = currentIndex;
 
 	final StringBuilder separatorBuilder = new StringBuilder();
@@ -90,17 +90,17 @@ public class StringTemplate {
 	regexPattern = Pattern.compile(regexBuilder.toString());
     }
 
-    private void unexpected(char c, int i) {
+    private void unexpected(final char c, final int i) {
 	throw new IllegalArgumentException("Unexpected char '" + c + "' at position: " + i);
     }
 
-    private void checkNextEnd(char[] charArray, int currentIndex) {
+    private void checkNextEnd(final char[] charArray, final int currentIndex) {
 	if (currentIndex + 1 > charArray.length) {
 	    throw new IllegalArgumentException("Unexpected end of pattern");
 	}
     }
 
-    private int readKeyword(char[] charArray, int currentIndex) {
+    private int readKeyword(final char[] charArray, final int currentIndex) {
 	checkNextEnd(charArray, currentIndex);
 
 	int start = currentIndex + 1;
@@ -119,7 +119,7 @@ public class StringTemplate {
 	throw new IllegalArgumentException("Bad end of template expected char '}' at the end");
     }
 
-    private int handleStopCharInKeywordRead(char[] charArray, int start, int end) {
+    private int handleStopCharInKeywordRead(final char[] charArray, final int start, final int end) {
 	if (end > start) {
 	    createKeyword(charArray, start, end);
 	    return end;
@@ -128,7 +128,7 @@ public class StringTemplate {
 	throw new IllegalArgumentException("Empty keyword not allowed");
     }
 
-    private void createKeyword(char[] charArray, int start, int end) {
+    private void createKeyword(final char[] charArray, final int start, final int end) {
 	final String keyContent = new String(Arrays.copyOfRange(charArray, start, end));
 	final Part part = new Part(keyContent, start - 1, end + 1);
 	if (keywords.contains(part)) {
@@ -139,7 +139,7 @@ public class StringTemplate {
 	regexBuilder.append(ANY_EXCEPT_SLASH);
     }
 
-    public StringExpression parse(String stringToParse) {
+    public StringExpression parse(final String stringToParse) {
 	final Matcher matcher = regexPattern.matcher(stringToParse);
 
 	if (!matcher.matches()) {
@@ -185,7 +185,7 @@ public class StringTemplate {
 	return template;
     }
 
-    public String eval(Map<String, String> map) {
+    public String eval(final Map<String, String> map) {
 	final PartBind[] reversed = new PartBind[keywords.size()];
 
 	int i = 0;
@@ -196,7 +196,7 @@ public class StringTemplate {
 	    }
 	    reversed[i++] = new PartBind(keyPart, match);
 	}
-	
+
 	final StringBuilder result = new StringBuilder(template);
 
 	for (i = 0; i < reversed.length; i++) {
@@ -205,5 +205,33 @@ public class StringTemplate {
 	}
 
 	return result.toString();
+    }
+
+    static class Part {
+
+	String part;
+	int start;
+	int end;
+
+	Part(final String part, final int start, final int end) {
+	    this.part = part;
+	    this.start = start;
+	    this.end = end;
+	}
+
+	@Override
+	public boolean equals(final Object obj) {
+	    return obj != null && obj.getClass() == Part.class && part != null && part.equals(((Part) obj).part);
+	}
+    }
+
+    static class PartBind {
+	Part keyword;
+	String match;
+
+	PartBind(final Part key, final String match) {
+	    this.keyword = key;
+	    this.match = match;
+	}
     }
 }

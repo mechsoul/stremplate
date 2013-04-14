@@ -5,7 +5,7 @@ import java.util.List;
 public class StringTemplateMapper {
     private StringTemplate source, destination;
 
-    private StringTemplateMapper(StringTemplate source, StringTemplate destination) {
+    private StringTemplateMapper(final StringTemplate source, final StringTemplate destination) {
 	this.source = source;
 	this.destination = destination;
 
@@ -26,7 +26,7 @@ public class StringTemplateMapper {
 	}
     }
 
-    public static StringTemplateMapper bind(StringTemplate source, StringTemplate destination) {
+    public static StringTemplateMapper bind(final StringTemplate source, final StringTemplate destination) {
 	return new StringTemplateMapper(source, destination);
     }
 
