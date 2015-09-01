@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mechsoul/stremplate.svg?branch=master)](https://travis-ci.org/mechsoul/stremplate)
+[![Build Status](https://travis-ci.org/mkrajc/stremplate.svg?branch=master)](https://travis-ci.org/mkrajc/stremplate)
 
 stremplate
 ==========
